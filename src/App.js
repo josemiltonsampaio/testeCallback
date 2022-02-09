@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useMemo, useState } from "react";
+import "./App.css";
+import Album from "./components/Album";
 
 function App() {
+  const [albums, setAlbums] = useState([]);
+  const [contador, setContador] = useState(0);
+
+  const buscaAlbums = () => {
+    fetch("https://jsonplaceholder.typicode.com/albums")
+      .then((r) => r.json())
+      .then((r) => setAlbums(r));
+  };
+
+  const incrementaContador = () => {
+    setContador((c) => c + 1);
+  };
+
+  useEffect(buscaAlbums, []);
+
+  const funcaoTeste = () => {
+    console.log("Rodou teste");
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={incrementaContador}>Contador: {contador} +</button>
+      <button onClick={funcaoTeste}>Teste</button>
+      <h1>Albums</h1>
+      {useMemo(() => {
+        return albums.map((a) => <Album key={a.id} album={a} />);
+      }, [albums])}
     </div>
   );
 }
